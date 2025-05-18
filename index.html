@@ -730,15 +730,6 @@
       <button onclick="closePopup()">Explorar Ahora</button>
     </div>
   </div>
-  <div class="popup" id="registerPopup">
-    <div class="popup-content">
-      <h2>Regístrate como Administrador</h2>
-      <p>Crea tu cuenta para gestionar la tienda</p>
-      <input type="text" id="adminUsername" placeholder="Usuario" required>
-      <input type="password" id="adminPassword" placeholder="Contraseña" required>
-      <button onclick="register()">Registrarse</button>
-    </div>
-  </div>
   <div class="popup" id="loginPopup">
     <div class="popup-content">
       <h2>Iniciar Sesión</h2>
@@ -753,7 +744,7 @@
       <h1>Belleza Pink</h1>
       <p>Tu brillo, nuestra pasión</p>
     </div>
-    <button id="authButton"></button>
+    <button id="authButton" onclick="showLoginPopup()">Iniciar Sesión</button>
   </header>
 
   <main>
@@ -770,7 +761,7 @@
 
     <section class="admin-panel fade-in" id="adminPanel">
       <h2>Panel de Administración</h2>
-      <p>Administra tu catálogo de productos aquí</p>
+      <p>Agrega nuevos productos al catálogo</p>
       <form id="productForm">
         <input type="text" id="productName" placeholder="Nombre del producto" required>
         <input type="text" id="productDescription" placeholder="Descripción del producto" required>
@@ -780,8 +771,7 @@
           <option value="available">Disponible</option>
           <option value="sold-out">Agotado</option>
         </select>
-        <input type="hidden" id="productId">
-        <button type="submit">Guardar Producto</button>
+        <button type="submit">Agregar Producto</button>
       </form>
       <div class="product-list" id="productList"></div>
     </section>
@@ -826,17 +816,17 @@
 
   <script>
     // Authentication
-    const adminData = JSON.parse(localStorage.getItem('admin')) || null;
+    const users = [
+      { username: 'Camila', password: 'camila2025' },
+      { username: 'Karina', password: 'karina2025' }
+    ];
 
     function checkAuth() {
+      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
       const authButton = document.getElementById('authButton');
       const adminPanel = document.getElementById('adminPanel');
 
-      if (!adminData) {
-        authButton.textContent = 'Registrarse';
-        authButton.onclick = showRegisterPopup;
-        adminPanel.classList.remove('visible');
-      } else if (localStorage.getItem('isAuthenticated') === 'true') {
+      if (isAuthenticated) {
         authButton.textContent = 'Cerrar Sesión';
         authButton.onclick = logout;
         adminPanel.classList.add('visible');
@@ -844,24 +834,6 @@
         authButton.textContent = 'Iniciar Sesión';
         authButton.onclick = showLoginPopup;
         adminPanel.classList.remove('visible');
-      }
-    }
-
-    function showRegisterPopup() {
-      document.getElementById('registerPopup').classList.add('active');
-    }
-
-    function register() {
-      const username = document.getElementById('adminUsername').value;
-      const password = document.getElementById('adminPassword').value;
-
-      if (username && password) {
-        localStorage.setItem('admin', JSON.stringify({ username, password }));
-        localStorage.setItem('isAuthenticated', 'true');
-        document.getElementById('registerPopup').classList.remove('active');
-        checkAuth();
-      } else {
-        alert('Por favor, completa todos los campos');
       }
     }
 
@@ -873,7 +845,8 @@
       const username = document.getElementById('loginUsername').value;
       const password = document.getElementById('loginPassword').value;
 
-      if (adminData && adminData.username === username && adminData.password === password) {
+      const user = users.find(u => u.username === username && u.password === password);
+      if (user) {
         localStorage.setItem('isAuthenticated', 'true');
         document.getElementById('loginPopup').classList.remove('active');
         checkAuth();
@@ -1034,7 +1007,6 @@
 
     productForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const productId = document.getElementById('productId').value;
       const product = {
         name: document.getElementById('productName').value,
         description: document.getElementById('productDescription').value,
@@ -1043,17 +1015,11 @@
         availability: document.getElementById('productAvailability').value
       };
 
-      if (productId === '') {
-        products.push(product);
-      } else {
-        products[productId] = product;
-      }
-
+      products.push(product);
       localStorage.setItem('products', JSON.stringify(products));
       renderProducts();
       renderProductList();
       productForm.reset();
-      document.getElementById('productId').value = '';
     });
 
     function editProduct(index) {
@@ -1063,7 +1029,10 @@
       document.getElementById('productPrice').value = product.price;
       document.getElementById('productImage').value = product.image;
       document.getElementById('productAvailability').value = product.availability;
-      document.getElementById('productId').value = index;
+      products.splice(index, 1);
+      localStorage.setItem('products', JSON.stringify(products));
+      renderProducts();
+      renderProductList();
     }
 
     function deleteProduct(index) {
