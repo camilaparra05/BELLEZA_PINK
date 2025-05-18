@@ -37,6 +37,9 @@
       text-align: center;
       z-index: 100;
       transition: background 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     header.scrolled {
@@ -60,6 +63,21 @@
       font-size: 0.9rem;
       color: #831843;
       font-weight: 300;
+    }
+
+    header button {
+      background: linear-gradient(45deg, #FF6F91, #DB2777);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 1.5rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+    }
+
+    header button:hover {
+      transform: scale(1.1);
     }
 
     main {
@@ -246,6 +264,17 @@
       height: 150px;
     }
 
+    .product-card.sold-out a {
+      background: #ccc;
+      pointer-events: none;
+    }
+
+    .product-card.sold-out p.price::after {
+      content: ' - Agotado';
+      color: #FF0000;
+      font-weight: bold;
+    }
+
     .polaroid-gallery {
       background: rgba(255, 228, 230, 0.4);
       padding: 2rem 1rem;
@@ -395,6 +424,96 @@
       height: 150px;
     }
 
+    .admin-panel {
+      display: none;
+      background: rgba(255, 228, 230, 0.4);
+      padding: 2rem 1rem;
+      margin: 0 0.5rem 2rem;
+      border-radius: 1.5rem;
+      text-align: center;
+    }
+
+    .admin-panel.visible {
+      display: block;
+    }
+
+    .admin-panel h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: #FF6F91;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-panel form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .admin-panel input,
+    .admin-panel select {
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 1.5rem;
+      width: 100%;
+      font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .admin-panel input:focus,
+    .admin-panel select:focus {
+      outline: none;
+      box-shadow: 0 4px 10px rgba(255, 111, 145, 0.3);
+    }
+
+    .admin-panel button {
+      background: linear-gradient(45deg, #FF6F91, #DB2777);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 1.5rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+    }
+
+    .admin-panel button:hover {
+      transform: scale(1.1);
+    }
+
+    .product-list {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .product-item {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .product-item button {
+      background: #FF6F91;
+      color: white;
+      border: none;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+
+    .product-item button.delete {
+      background: #DB2777;
+    }
+
     .popup {
       position: fixed;
       top: 0;
@@ -441,6 +560,23 @@
       font-size: 0.8rem;
       color: #831843;
       margin-bottom: 1rem;
+    }
+
+    .popup input {
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 1.5rem;
+      width: 100%;
+      max-width: 250px;
+      font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 0.5rem;
+    }
+
+    .popup input:focus {
+      outline: none;
+      box-shadow: 0 4px 10px rgba(255, 111, 145, 0.3);
     }
 
     .popup button {
@@ -594,79 +730,89 @@
       <button onclick="closePopup()">Explorar Ahora</button>
     </div>
   </div>
+  <div class="popup" id="registerPopup">
+    <div class="popup-content">
+      <h2>Regístrate como Administrador</h2>
+      <p>Crea tu cuenta para gestionar la tienda</p>
+      <input type="text" id="adminUsername" placeholder="Usuario" required>
+      <input type="password" id="adminPassword" placeholder="Contraseña" required>
+      <button onclick="register()">Registrarse</button>
+    </div>
+  </div>
+  <div class="popup" id="loginPopup">
+    <div class="popup-content">
+      <h2>Iniciar Sesión</h2>
+      <p>Ingresa tus credenciales de administrador</p>
+      <input type="text" id="loginUsername" placeholder="Usuario" required>
+      <input type="password" id="loginPassword" placeholder="Contraseña" required>
+      <button onclick="login()">Iniciar Sesión</button>
+    </div>
+  </div>
   <header>
-    <h1>Belleza Pink</h1>
-    <p>Tu brillo, nuestra pasión</p>
+    <div>
+      <h1>Belleza Pink</h1>
+      <p>Tu brillo, nuestra pasión</p>
+    </div>
+    <button id="authButton"></button>
   </header>
 
   <main>
     <section class="carousel fade-in">
       <div class="carousel-images" id="carouselImages">
-        <!-- Reemplaza con tus banners -->
-        <img src="Imagenes/imagen1.png" alt="Banner 1">
-        <img src="Imagenes/imagen2.png" alt="Banner 2">
-        <img src="Imagenes/Imagen3.png" alt="Banner 3">
+        <img src="https://via.placeholder.com/800x250?text=Tienda+Exterior" alt="Tienda Exterior">
       </div>
-      <div class="carousel-overlay"><p>Deslumbra con cada look</p></div>
-      <button class="carousel-prev" onclick="prevSlide()">❮</button>
-      <button class="carousel-next" onclick="nextSlide()">❯</button>
+      <div class="carousel-overlay">
+        <p>¡Descubre nuestras novedades!</p>
+      </div>
+      <button class="carousel-prev" onclick="moveCarousel(-1)">❮</button>
+      <button class="carousel-next" onclick="moveCarousel(1)">❯</button>
     </section>
 
-    <section class="products">
-      <!-- Reemplaza con tus productos -->
-      <div class="product-card fade-in">
-        <img src="https://via.placeholder.com/300x200/FFE4E6/831843?text=Labial" alt="Labial Rosa Intenso">
-        <div class="product-card-content">
-          <h3>Labial Rosa Intenso</h3>
-          <p class="description">Color vibrante para cualquier ocasión</p>
-          <p class="price">$18.000</p>
-          <a href="https://wa.me/573222246651?text=Hola%20Belleza%20Pink!%20Quiero%20comprar:%20Labial%20Rosa%20Intenso%20por%20$18.000" target="_blank" onclick="createParticles(event.clientX, event.clientY)">Comprar Ahora</a>
-        </div>
-      </div>
-      <div class="product-card fade-in">
-        <img src="https://via.placeholder.com/300x200/FFE4E6/831843?text=Sombras" alt="Sombras Glam Brillo">
-        <div class="product-card-content">
-          <h3>Sombras Glam Brillo</h3>
-          <p class="description">Tonos brillantes para un look audaz</p>
-          <p class="price">$24.000</p>
-          <a href="https://wa.me/573222246651?text=Hola%20Belleza%20Pink!%20Quiero%20comprar:%20Sombras%20Glam%20Brillo%20por%20$24.000" target="_blank" onclick="createParticles(event.clientX, event.clientY)">Comprar Ahora</a>
-        </div>
-      </div>
-      <div class="product-card fade-in">
-        <img src="https://via.placeholder.com/300x200/FFE4E6/831843?text=Skincare" alt="Rutina Glow Piel">
-        <div class="product-card-content">
-          <h3>Rutina Glow Piel</h3>
-          <p class="description">Hidratación y brillo natural</p>
-          <p class="price">$55.000</p>
-          <a href="https://wa.me/573222246651?text=Hola%20Belleza%20Pink!%20Quiero%20comprar:%20Rutina%20Glow%20Piel%20por%20$55.000" target="_blank" onclick="createParticles(event.clientX, event.clientY)">Comprar Ahora</a>
-        </div>
-      </div>
+    <section class="admin-panel fade-in" id="adminPanel">
+      <h2>Panel de Administración</h2>
+      <p>Administra tu catálogo de productos aquí</p>
+      <form id="productForm">
+        <input type="text" id="productName" placeholder="Nombre del producto" required>
+        <input type="text" id="productDescription" placeholder="Descripción del producto" required>
+        <input type="number" id="productPrice" placeholder="Precio ($)" step="0.01" required>
+        <input type="text" id="productImage" placeholder="URL de la imagen" required>
+        <select id="productAvailability" required>
+          <option value="available">Disponible</option>
+          <option value="sold-out">Agotado</option>
+        </select>
+        <input type="hidden" id="productId">
+        <button type="submit">Guardar Producto</button>
+      </form>
+      <div class="product-list" id="productList"></div>
+    </section>
+
+    <section class="products fade-in" id="productsSection">
+      <!-- Productos se generan dinámicamente -->
     </section>
 
     <section class="polaroid-gallery fade-in">
-      <h2>Galería de Combos</h2>
-      <p>Desliza para descubrir nuestros estilos</p>
+      <h2>Explora Nuestros Looks</h2>
+      <p>Desliza para ver más</p>
       <div class="polaroid-container">
-        <!-- Reemplaza con tus fotos -->
         <div class="polaroid" onclick="createParticles(event.clientX, event.clientY)">
-          <img src="Imagenes/imagen4.png" alt="Look 1">
-          <p>Combo uno</p>
+          <img src="https://via.placeholder.com/200x150?text=Look+1" alt="Look 1">
+          <p>Look 1</p>
         </div>
         <div class="polaroid" onclick="createParticles(event.clientX, event.clientY)">
-          <img src="Imagenes/imagen5.png" alt="Look 2">
-          <p>Combo dos</p>
+          <img src="https://via.placeholder.com/200x150?text=Look+2" alt="Look 2">
+          <p>Look 2</p>
         </div>
         <div class="polaroid" onclick="createParticles(event.clientX, event.clientY)">
-          <img src="Imagenes/imagen4.png" alt="Look 3">
-          <p>Combo Tres</p>
+          <img src="https://via.placeholder.com/200x150?text=Look+3" alt="Look 3">
+          <p>Look 3</p>
         </div>
       </div>
     </section>
 
     <section class="subscribe fade-in">
-      <h2>Únete al Brillo Pink</h2>
-      <p>Recibe ofertas exclusivas y tips de belleza</p>
-      <form onsubmit="handleSubscribe(event)">
+      <h2>Suscríbete para Ofertas</h2>
+      <p>Recibe descuentos exclusivos en tu correo</p>
+      <form>
         <input type="email" placeholder="Tu correo electrónico" required>
         <button type="submit">Suscribirme</button>
       </form>
@@ -674,52 +820,169 @@
   </main>
 
   <footer>
-    <p>© 2025 Belleza Pink. Creado con 💖 para ti.</p>
-    <div>
-      <a href="https://www.instagram.com/bellez_pink/" target="_blank" class="instagram" onclick="createParticles(event.clientX, event.clientY)">Instagram</a>
-      <a href="https://facebook.com" target="_blank" onclick="createParticles(event.clientX, event.clientY)">Facebook</a>
-      <a href="https://tiktok.com" target="_blank" onclick="createParticles(event.clientX, event.clientY)">TikTok</a>
-    </div>
+    <p>© 2025 Belleza Pink - Todos los derechos reservados</p>
+    <a href="https://www.instagram.com/bellez_pink/" class="instagram">@bellez_pink</a>
   </footer>
 
   <script>
-    // Pop-up
-    window.addEventListener('load', () => {
+    // Authentication
+    const adminData = JSON.parse(localStorage.getItem('admin')) || null;
+
+    function checkAuth() {
+      const authButton = document.getElementById('authButton');
+      const adminPanel = document.getElementById('adminPanel');
+
+      if (!adminData) {
+        authButton.textContent = 'Registrarse';
+        authButton.onclick = showRegisterPopup;
+        adminPanel.classList.remove('visible');
+      } else if (localStorage.getItem('isAuthenticated') === 'true') {
+        authButton.textContent = 'Cerrar Sesión';
+        authButton.onclick = logout;
+        adminPanel.classList.add('visible');
+      } else {
+        authButton.textContent = 'Iniciar Sesión';
+        authButton.onclick = showLoginPopup;
+        adminPanel.classList.remove('visible');
+      }
+    }
+
+    function showRegisterPopup() {
+      document.getElementById('registerPopup').classList.add('active');
+    }
+
+    function register() {
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
+
+      if (username && password) {
+        localStorage.setItem('admin', JSON.stringify({ username, password }));
+        localStorage.setItem('isAuthenticated', 'true');
+        document.getElementById('registerPopup').classList.remove('active');
+        checkAuth();
+      } else {
+        alert('Por favor, completa todos los campos');
+      }
+    }
+
+    function showLoginPopup() {
+      document.getElementById('loginPopup').classList.add('active');
+    }
+
+    function login() {
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+
+      if (adminData && adminData.username === username && adminData.password === password) {
+        localStorage.setItem('isAuthenticated', 'true');
+        document.getElementById('loginPopup').classList.remove('active');
+        checkAuth();
+      } else {
+        alert('Usuario o contraseña incorrectos');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('isAuthenticated');
+      checkAuth();
+    }
+
+    // Carousel
+    let currentIndex = 0;
+    const images = document.querySelectorAll('.carousel-images img');
+    const totalImages = images.length;
+
+    function moveCarousel(direction) {
+      currentIndex = (currentIndex + direction + totalImages) % totalImages;
+      const offset = -currentIndex * 100;
+      document.getElementById('carouselImages').style.transform = `translateX(${offset}%)`;
+    }
+
+    // Popup
+    window.onload = function() {
       setTimeout(() => {
         document.getElementById('welcomePopup').classList.add('active');
       }, 1000);
-    });
+      checkAuth();
+    };
 
     function closePopup() {
       document.getElementById('welcomePopup').classList.remove('active');
-      createParticles(window.innerWidth / 2, window.innerHeight / 2);
     }
 
-    // Carrusel
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.carousel-images img');
-    const totalSlides = slides.length;
+    // Particles and Lightning
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    function showSlide(index) {
-      const carouselImages = document.getElementById('carouselImages');
-      if (index >= totalSlides) currentSlide = 0;
-      if (index < 0) currentSlide = totalSlides - 1;
-      carouselImages.style.transform = `translateX(-${currentSlide * 100}%)`;
+    let particlesArray = [];
+    const numberOfParticles = 50;
+
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 5 + 1;
+        this.speedX = Math.random() * 2 - 1;
+        this.speedY = Math.random() * 2 - 1;
+        this.life = 50;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life--;
+      }
+
+      draw() {
+        ctx.fillStyle = `rgba(255, 111, 145, ${this.life / 50})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
-    function nextSlide() {
-      currentSlide++;
-      showSlide(currentSlide);
+    function createParticles(x, y) {
+      for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle(x, y));
+      }
     }
 
-    function prevSlide() {
-      currentSlide--;
-      showSlide(currentSlide);
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+        if (particlesArray[i].life <= 0) {
+          particlesArray.splice(i, 1);
+          i--;
+        }
+      }
+      requestAnimationFrame(animateParticles);
     }
 
-    setInterval(nextSlide, 4000);
+    animateParticles();
 
-    // Efecto de desplazamiento en el encabezado
+    document.addEventListener('click', (e) => {
+      createParticles(e.clientX, e.clientY);
+      drawLightning(e.clientX, e.clientY);
+    });
+
+    function drawLightning(x, y) {
+      ctx.strokeStyle = 'rgba(255, 111, 145, 0.8)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      for (let i = 0; i < 5; i++) {
+        x += (Math.random() - 0.5) * 50;
+        y += Math.random() * 30;
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    // Scroll Effect for Header
     window.addEventListener('scroll', () => {
       const header = document.querySelector('header');
       if (window.scrollY > 50) {
@@ -729,122 +992,90 @@
       }
     });
 
-    // Animaciones de entrada
-    window.addEventListener('load', () => {
-      document.querySelectorAll('.fade-in').forEach((el, index) => {
-        el.style.animationDelay = `${index * 200}ms`;
+    // Product Management
+    const productForm = document.getElementById('productForm');
+    const productsSection = document.getElementById('productsSection');
+    const productList = document.getElementById('productList');
+    let products = JSON.parse(localStorage.getItem('products')) || [];
+
+    function renderProducts() {
+      productsSection.innerHTML = '';
+      products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = `product-card ${product.availability === 'sold-out' ? 'sold-out' : ''}`;
+        productCard.innerHTML = `
+          <img src="${product.image}" alt="${product.name}">
+          <div class="product-card-content">
+            <h3>${product.name}</h3>
+            <p class="description">${product.description}</p>
+            <p class="price">$${parseFloat(product.price).toFixed(2)}</p>
+            <a href="https://wa.me/1234567890?text=Hola%20Belleza%20Pink!%20Quiero%20comprar:%20${product.name}%20por%20$${product.price}">Comprar Ahora</a>
+          </div>
+        `;
+        productsSection.appendChild(productCard);
       });
-    });
-
-    // Formulario
-    function handleSubscribe(event) {
-      event.preventDefault();
-      const email = event.target.querySelector('input').value;
-      createParticles(event.clientX, event.clientY);
-      setTimeout(() => {
-        alert(`¡Wow, ${email}! ¡Bienvenida al universo Pink!`);
-        event.target.reset();
-      }, 500);
     }
 
-    // Partículas
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let particles = [];
-
-    class Particle {
-      constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.size = Math.random() * 5 + 2;
-        this.speedX = Math.random() * 3 - 1.5;
-        this.speedY = Math.random() * 3 - 1.5;
-        this.opacity = 1;
-        this.color = `hsl(${Math.random() * 20 + 330}, 70%, 60%)`;
-      }
-
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        this.size *= 0.95;
-        this.opacity -= 0.02;
-      }
-
-      draw() {
-        ctx.fillStyle = this.color;
-        ctx.globalAlpha = this.opacity;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      }
-    }
-
-    function createParticles(x, y) {
-      for (let i = 0; i < 20; i++) {
-        particles.push(new Particle(x, y));
-      }
-    }
-
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles = particles.filter(p => p.size > 0.1 && p.opacity > 0);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
+    function renderProductList() {
+      productList.innerHTML = '';
+      products.forEach((product, index) => {
+        const productItem = document.createElement('div');
+        productItem.className = 'product-item';
+        productItem.innerHTML = `
+          <span>${product.name} - $${product.price} (${product.availability === 'sold-out' ? 'Agotado' : 'Disponible'})</span>
+          <div>
+            <button onclick="editProduct(${index})">Editar</button>
+            <button class="delete" onclick="deleteProduct(${index})">Eliminar</button>
+          </div>
+        `;
+        productList.appendChild(productItem);
       });
-      requestAnimationFrame(animateParticles);
     }
 
-    animateParticles();
+    productForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const productId = document.getElementById('productId').value;
+      const product = {
+        name: document.getElementById('productName').value,
+        description: document.getElementById('productDescription').value,
+        price: document.getElementById('productPrice').value,
+        image: document.getElementById('productImage').value,
+        availability: document.getElementById('productAvailability').value
+      };
 
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      if (productId === '') {
+        products.push(product);
+      } else {
+        products[productId] = product;
+      }
+
+      localStorage.setItem('products', JSON.stringify(products));
+      renderProducts();
+      renderProductList();
+      productForm.reset();
+      document.getElementById('productId').value = '';
     });
 
-    // Cursor personalizado (rayo rosado)
-    function createSparkle(x, y) {
-      const sparkle = document.createElement('div');
-      sparkle.style.position = 'fixed';
-      sparkle.style.width = '15px';
-      sparkle.style.height = '15px';
-      sparkle.style.background = 'radial-gradient(circle, rgba(255, 111, 145, 0.7), transparent)';
-      sparkle.style.borderRadius = '50%';
-      sparkle.style.pointerEvents = 'none';
-      sparkle.style.left = `${x - 7.5}px`;
-      sparkle.style.top = `${y - 7.5}px`;
-      sparkle.style.zIndex = '1000';
-      sparkle.style.animation = 'sparkle 0.5s ease-out forwards';
-      document.body.appendChild(sparkle);
-      setTimeout(() => sparkle.remove(), 500);
+    function editProduct(index) {
+      const product = products[index];
+      document.getElementById('productName').value = product.name;
+      document.getElementById('productDescription').value = product.description;
+      document.getElementById('productPrice').value = product.price;
+      document.getElementById('productImage').value = product.image;
+      document.getElementById('productAvailability').value = product.availability;
+      document.getElementById('productId').value = index;
     }
 
-    document.addEventListener('mousemove', (e) => {
-      createSparkle(e.clientX, e.clientY);
-      createParticles(e.clientX, e.clientY);
-    });
+    function deleteProduct(index) {
+      products.splice(index, 1);
+      localStorage.setItem('products', JSON.stringify(products));
+      renderProducts();
+      renderProductList();
+    }
 
-    document.addEventListener('touchmove', (e) => {
-      const touch = e.touches[0];
-      createSparkle(touch.clientX, touch.clientY);
-      createParticles(touch.clientX, touch.clientY);
-    });
-
-    document.addEventListener('touchstart', (e) => {
-      const touch = e.touches[0];
-      createSparkle(touch.clientX, touch.clientY);
-      createParticles(touch.clientX, touch.clientY);
-    });
+    // Initial render
+    renderProducts();
+    renderProductList();
   </script>
-  <style>
-    @keyframes sparkle {
-      0% { transform: scale(1); opacity: 1; }
-      100% { transform: scale(1.5); opacity: 0; }
-    }
-  </style>
 </body>
 </html>
